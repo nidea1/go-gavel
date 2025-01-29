@@ -68,7 +68,7 @@ go-gavel-microservices/
 │       ├── .postgres
 │       └── ...
 ├── scripts/                            # Helper scripts
-│   ├── generate-protos.sh
+│   ├── generate_protos.sh
 │   └── ...
 ├── go.mod
 ├── go.sum
@@ -77,6 +77,7 @@ go-gavel-microservices/
 ├── .dockerignore
 ├── figures/                            # Diagrams and images for documentation
 │   └── ...
+├── LICENSE
 └── README.md
 ```
 
