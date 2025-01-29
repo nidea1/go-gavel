@@ -2,7 +2,7 @@
 <!-- markdownlint-disable html -->
 <!-- markdownlint-disable no-duplicate-header -->
 <div align="center">
-  <img src="https://github.com/nidea1/go-gavel/blob/main/figures/logo-by-dall-e.png?raw=true" width="60%" alt="goGavel" />
+  <img src="https://github.com/nidea1/go-gavel/blob/main/figures/logo-by-dall-e.png?raw=true" width="40%" alt="goGavel" />
 </div>
 
 ## 1. Introduction
