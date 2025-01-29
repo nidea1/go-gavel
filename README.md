@@ -7,9 +7,11 @@
 
 ## 1. Introduction
 
-A modern, scalable microservices boilerplate built with Go, gRPC, and Protobuf.
+goGavel is a gRPC-based online auction platform built with Go, structured as a microservices monorepo. This project is developed as a learning exercise to explore microservices architecture, gRPC communication, and scalable system design with Go.
 
-## Key Features
+The goal of goGavel is to provide a real-time auction system where users can place bids, manage their auctions, and experience a high-performance distributed system. This project focuses on best practices in Go, efficient inter-service communication with gRPC, and clean architecture principles.
+
+## 2. Key Features
 
 - 🚀 **gRPC** - High-performance RPC framework
 - 📦 **Protobuf** - Efficient data serialization
@@ -19,7 +21,7 @@ A modern, scalable microservices boilerplate built with Go, gRPC, and Protobuf.
 - ⚙️ **Environment Variables** - Flexible configuration
 - 🎯 **Clean Architecture** - Maintainable and testable code
 
-## Core Services
+## 3. Core Services
 
 - **Auth** - User authentication and authorization
 - **Auction** - Auction management
@@ -27,7 +29,7 @@ A modern, scalable microservices boilerplate built with Go, gRPC, and Protobuf.
 - **Payment** - Payment processing
 ... and more to come!
 
-## Directory Structure
+## 4. Directory Structure
 
 ```plaintext
 go-gavel-microservices/
@@ -78,9 +80,9 @@ go-gavel-microservices/
 └── README.md
 ```
 
-## Project Status
+## 5. Project Status
 
-### Service Implementation
+### 1. Service Implementation
 
 - [ ] **Auth Service**
   - User authentication and authorization with JWT
@@ -99,7 +101,7 @@ go-gavel-microservices/
   - Multiple payment method support
   - Transaction history
 
-### Technical Roadmap
+### 2. Technical Roadmap
 
 - [ ] **Security**
   - JWT authentication
@@ -112,6 +114,14 @@ go-gavel-microservices/
 - [ ] **Documentation**
   - Development guidelines
 
-## Getting Started
+## 6. Getting Started
 
 Documentation coming soon...
+
+## 7. License
+
+This code repository is licensed under the MIT License. See [LICENSE](https://github.com/nidea1/go-gavel/blob/main/LICENSE) for more information.
+
+## 8. Contact
+
+If you have any questions or suggestions, feel free to reach out to me at [crlidoruk@gmail.com](mailto:crlidoruk@gmail.com).
