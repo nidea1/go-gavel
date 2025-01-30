@@ -27,38 +27,68 @@ The goal of goGavel is to provide a real-time auction system where users can pla
 - **Auction** - Auction management
 - **Bid** - Real-time bidding
 - **Payment** - Payment processing
+
+<br />
 ... and more to come!
 
 ## 4. Directory Structure
 
 ```plaintext
 go-gavel-microservices/
+├── proto/                              # Protobuf files
+│   ├── auth/
+│   │   └── auth.proto                  # Auth service definition
+│   ├── shared/
+│   │   └── shared.proto                # Shared definitions
+│   └── ...
+├── services/                           # Service implementations
+│   ├── auth/
+│   │   ├── api/                        # gRPC API handlers
+│   │   │   └── auth_handler.go
+│   │   ├── cmd/
+│   │   │   └── main.go                 # Service entry point
+│   │   ├── docs/                       # API documentation
+│   │   │   └── openapi.yaml
+│   │   └── internal/
+│   │       ├── domain/                 # Domain models
+│   │       │   ├── user.go
+│   │       │   └── repository.go
+│   │       ├── usecase/                # Business logic
+│   │       │   ├── command/
+│   │       │   │   └── register_user.go
+│   │       │   └── query/
+│   │       │       └── get_user.go
+│   │       ├── repository/             # Data access layer
+│   │       │   ├── postgres/
+│   │       │   │   └── user_repository.go
+│   │       │   └── redis/
+│   │       │       └── cache_repository.go
+│   │       └── events/                 # Event handlers
+│   │           ├── publisher.go
+│   │           └── consumer.go
+│   └── ...
+├── pkg/                                # Shared packages
+│   ├── utils/                          # Utility functions, validators, and helpers
+│   │   ├── logger.go
+│   │   └── ...
+│   ├── errors/                         # Custom error types
+│   │   ├── errors.go
+│   │   └── ...
+│   ├── grpc/                           # gRPC helpers, interceptors, and middleware
+│   │   ├── grpc.go
+│   │   └── ...
+│   ├── database/                       # Database connection and query builder
+│   │   ├── database.go
+│   │   └── ...
+│   ├── kafka/                          # Kafka producer and consumer
+│   │   ├── kafka.go
+│   │   └── ...
+│   └── ...
 ├── build/                              # Dockerfiles for building the services 
 │   ├── base/
 │   │   └── Dockerfile                  # Base builder image for all services includes Go + Protobuf + gRPC
 │   └── auth/
 │       └── Dockerfile
-├── cmd/                                # Entry point for each service
-│   └── auth/
-│       └── main.go
-├── internal/
-│   └── proto/                          # Generated protobuf files
-│       ├── auth/
-│       └── ...
-├── proto/                              # Protobuf files
-│   ├── auth.proto
-│   └── ...
-├── services/                           # Service implementations
-│   ├── auth/
-│   │   ├── api/
-│   │   │   └── auth_service.go         # gRPC service implementation
-│   │   ├── domain/
-│   │   │   └── user.go                 # Domain model
-│   │   ├── repository/
-│   │   │   └── user_repository.go      # Repository implementation
-│   │   └── usecase/
-│   │       └── user_usecase.go         # Use case implementation
-│   └── ...
 ├── compose/                            # Docker compose files
 │   └── local/
 │       └── docker-compose.local.yml
