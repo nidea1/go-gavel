@@ -1,37 +1,61 @@
 #!/usr/bin/env bash
 
-# Root directory containing source .proto files
-PROTO_SRC_DIR="proto"
+#!/usr/bin/env bash
 
-# Directory where generated .pb.go files will be placed
-PROTO_OUT_DIR="proto-gen"
+# Stop the script on error
+set -e
 
-# Create proto-gen directory (doesn't error if exists, creates if not)
-mkdir -p "$PROTO_OUT_DIR"
+# Check if protoc is installed
+if ! command -v protoc &> /dev/null
+then
+    echo "protoc not found. Please install protoc first."
+    exit 1
+fi
 
-# Find all .proto files
-PROTO_FILES=$(find "$PROTO_SRC_DIR" -type f -name "*.proto")
+# Check if protoc-gen-go is installed
+if ! command -v protoc-gen-go &> /dev/null
+then
+    echo "protoc-gen-go not found."
+    go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+    echo "protoc-gen-go installed."
+fi
 
-# Loop through each .proto file
-for proto_file in $PROTO_FILES; do
-    # Example: proto_file = "proto/auth/auth.proto"
-    # subdir = "/auth"
-    subdir=$(dirname "$proto_file" | sed "s|^$PROTO_SRC_DIR||")
+# Check if protoc-gen-go-grpc is installed
+if ! command -v protoc-gen-go-grpc &> /dev/null
+then
+    echo "protoc-gen-go-grpc not found."
+    go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+    echo "protoc-gen-go-grpc installed."
+fi
 
-    # Create the same subdirectories in output directory
-    # Example: "proto-gen/auth"
-    mkdir -p "$PROTO_OUT_DIR/$subdir"
+# Project proto directory
+BASE_PROTO_DIR="proto"
 
-    echo "Generating $proto_file into $PROTO_OUT_DIR/$subdir"
-
-    # protoc command
-    protoc \
-        -I="$PROTO_SRC_DIR" \
-        --go_out="$PROTO_OUT_DIR" \
-        --go_opt=paths=source_relative \
-        --go-grpc_out="$PROTO_OUT_DIR" \
-        --go-grpc_opt=paths=source_relative \
-        "$proto_file"
+# Loop over all subdirectories under proto/
+for dir in "$BASE_PROTO_DIR"/*; do
+    # Check if it's a directory
+    if [ -d "$dir" ]; then
+        echo "Processing directory: $dir"
+        
+        # List .proto files in that directory (remove -maxdepth if you need to check nested subdirectories)
+        proto_files=$(find "$dir" -maxdepth 1 -name "*.proto")
+        
+        # If there are .proto files, compile them
+        if [ -n "$proto_files" ]; then
+            echo "Files to compile: $proto_files"
+            protoc \
+              -I="$BASE_PROTO_DIR" \
+              -I="$dir" \
+              --go_out="$dir" \
+              --go_opt=paths=source_relative \
+              --go-grpc_out="$dir" \
+              --go-grpc_opt=paths=source_relative \
+              $proto_files
+            echo "Compilation completed: $dir"
+        else
+            echo "No .proto file found in $dir."
+        fi
+    fi
 done
 
-echo "All protos have been successfully generated!"
+echo "All proto files compiled successfully."

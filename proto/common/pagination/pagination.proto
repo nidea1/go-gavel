@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package common.pagination;
+option go_package = "github.com/nidea1/go-gavel/proto/common/pagination";
+
+
+message PaginationRequest {
+    uint32 page = 1;
+    uint32 limit = 2;
+}
+
+message PaginationResponse {
+    uint32 current_page = 1;
+    uint32 limit = 2;
+    uint32 total_pages = 3;
+    uint32 next_page = 4;
+    uint32 prev_page = 5;
+    uint64 total_items = 6;
+}

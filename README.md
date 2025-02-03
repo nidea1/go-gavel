@@ -37,74 +37,53 @@ The goal of goGavel is to provide a real-time auction system where users can pla
 go-gavel-microservices/
 ├── proto/                              # Protobuf files
 │   ├── auth/
-│   │   └── auth.proto                  # Auth service definition
-│   ├── shared/
-│   │   └── shared.proto                # Shared definitions
-│   └── ...
+│   ├── common/                         # Shared messages and enums
+│   ├── ...
+│   └── go.mod
 ├── services/                           # Service implementations
 │   ├── auth/
+│   │   ├── go.mod
 │   │   ├── api/                        # gRPC API handlers
-│   │   │   └── auth_handler.go
 │   │   ├── cmd/
 │   │   │   └── main.go                 # Service entry point
 │   │   ├── docs/                       # API documentation
-│   │   │   └── openapi.yaml
 │   │   └── internal/
 │   │       ├── domain/                 # Domain models
-│   │       │   ├── user.go
-│   │       │   └── repository.go
 │   │       ├── usecase/                # Business logic
 │   │       │   ├── command/
-│   │       │   │   └── register_user.go
 │   │       │   └── query/
-│   │       │       └── get_user.go
 │   │       ├── repository/             # Data access layer
-│   │       │   ├── postgres/
-│   │       │   │   └── user_repository.go
-│   │       │   └── redis/
-│   │       │       └── cache_repository.go
 │   │       └── events/                 # Event handlers
 │   │           ├── publisher.go
 │   │           └── consumer.go
 │   └── ...
 ├── pkg/                                # Shared packages
 │   ├── utils/                          # Utility functions, validators, and helpers
-│   │   ├── logger.go
 │   │   └── ...
 │   ├── errors/                         # Custom error types
-│   │   ├── errors.go
 │   │   └── ...
 │   ├── grpc/                           # gRPC helpers, interceptors, and middleware
-│   │   ├── grpc.go
 │   │   └── ...
 │   ├── database/                       # Database connection and query builder
-│   │   ├── database.go
 │   │   └── ...
 │   ├── kafka/                          # Kafka producer and consumer
-│   │   ├── kafka.go
 │   │   └── ...
-│   └── ...
+│   ├── ...
+│   └── go.mod
 ├── build/                              # Dockerfiles for building the services 
-│   ├── base/
-│   │   └── Dockerfile                  # Base builder image for all services includes Go + Protobuf + gRPC
-│   └── auth/
-│       └── Dockerfile
-├── compose/                            # Docker compose files
-│   └── local/
-│       └── docker-compose.local.yml
+│   ├── base/                           # Base builder image for all services includes Go + Protobuf + gRPC
+│   ├── auth/                           # Auth service builder image
+│   └── ...
 ├── .envs/                              # Environment variables
-│   └── .local/
-│       ├── .auth
-│       ├── .postgres
-│       └── ...
+│   ├── .local/                         # Local development environment variables
+│   └── ...
 ├── scripts/                            # Helper scripts
 │   ├── generate_protos.sh
 │   └── ...
-├── go.mod
-├── go.sum
 ├── Makefile
 ├── .gitignore
 ├── .dockerignore
+├── docker-compose.local.yml
 ├── figures/                            # Diagrams and images for documentation
 │   └── ...
 ├── LICENSE

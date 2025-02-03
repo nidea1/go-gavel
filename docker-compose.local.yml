@@ -1,0 +1,30 @@
+services:
+  auth:
+    image: local_auth
+    container_name: local_auth
+    build:
+      context: .
+      dockerfile: build/auth/app.Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - .envs/.local/.auth
+      - .envs/.local/.auth-db
+    depends_on:
+      - auth-db
+  
+  auth-db:
+    image: local_auth_db
+    container_name: local_auth_db
+    build:
+      context: .
+      dockerfile: build/auth/db.Dockerfile
+    volumes:
+      - auth-db-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    env_file:
+      - .envs/.local/.auth-db
+
+volumes:
+  auth-db-data:

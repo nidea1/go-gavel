@@ -1,7 +1,7 @@
-DOCKER_COMPOSE = docker compose -f compose/local/docker-compose.local.yml
+DOCKER_COMPOSE = docker compose -f docker-compose.local.yml
 
 # Declare phony targets (these are not files)
-.PHONY: proto build-base up down stop help
+.PHONY: proto build-base build-auth-app build-auth-db build-auth up down stop help
 
 # Proto generation
 proto:
@@ -13,6 +13,18 @@ proto:
 build-base:
 	@echo "Building base image..."
 	@docker build -t go-gavel-base:latest ./build/base
+
+# Build auth images using separate Dockerfiles for app and db
+build-auth-app:
+	@echo "Building auth app image..."
+	@docker build -t go-gavel-auth-app:latest -f ./build/auth/app.Dockerfile ./build/auth
+
+build-auth-db:
+	@echo "Building auth db image..."
+	@docker build -t go-gavel-auth-db:latest -f ./build/auth/db.Dockerfile ./build/auth
+
+build-auth: build-auth-app build-auth-db
+	@echo "Built auth images."
 
 # Docker commands
 up:

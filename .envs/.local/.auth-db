@@ -1,7 +1,8 @@
-# PostgreSQL
+# Auth DB
 # ------------------------------------------------------------------------------
 POSTGRES_HOST=postgres
-POSTGRES_PORT=5432
+POSTGRES_PORT=5433
 POSTGRES_DB=postgres
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=123456789
+POSTGRES_SSL_MODE=disable

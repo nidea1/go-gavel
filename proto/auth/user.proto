@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package auth;
+import "common/pagination/pagination.proto";
+
+option go_package = "github.com/nidea1/go-gavel/proto/auth";
+
+
+message User {
+    uint64 id = 1;
+    string first_name = 2;
+    string last_name = 3;
+    string email = 4;
+    string password = 5;
+    bool is_admin = 6;
+    bool is_active = 7;
+    uint64 last_login = 8;
+    uint64 created_at = 9;
+}
+
+message GetUserListRequest {
+    common.pagination.PaginationRequest pagination = 1;
+}
+
+message GetUserListResponse {
+    repeated User data = 1;
+    common.pagination.PaginationResponse pagination = 2;
+}
+
+service UserService {
+    rpc GetUserList(GetUserListRequest) returns (GetUserListResponse);
+}
