@@ -30,10 +30,17 @@ type JWTConfig struct {
 	RefreshTokenTTL int
 }
 
+type RedisConfig struct {
+	Addr     string
+	Password string
+	DB       int
+}
+
 type Config struct {
 	Server   ServerConfig
 	Database DatabaseConfig
 	JWT      JWTConfig
+	Redis    RedisConfig
 	// Kafka will be added here
 }
 
@@ -61,6 +68,11 @@ func LoadConfig() *Config {
 			SecretKey:       utils.GetEnvString("JWT_SECRET_KEY", "secret"),
 			AccessTokenTTL:  utils.GetEnvInt("JWT_ACCESS_TOKEN_TTL", 15),
 			RefreshTokenTTL: utils.GetEnvInt("JWT_REFRESH_TOKEN_TTL", 30),
+		},
+		Redis: RedisConfig{
+			Addr:     utils.GetEnvString("REDIS_ADDR", "localhost:6379"),
+			Password: utils.GetEnvString("REDIS_PASSWORD", ""),
+			DB:       utils.GetEnvInt("REDIS_DB", 0),
 		},
 	}
 }
