@@ -1,3 +1,4 @@
+# ------------------------------------------------------------------------------
 # Auth DB
 # ------------------------------------------------------------------------------
 POSTGRES_HOST=postgres
@@ -6,3 +7,14 @@ POSTGRES_DB=postgres
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=123456789
 POSTGRES_SSL_MODE=disable
+POSTGRES_MIN_CONNS=1
+POSTGRES_MAX_CONNS=10
+POSTGRES_MAX_CONN_LIFETIME=1
+POSTGRES_MAX_CONN_IDLE_TIME=30
+POSTGRES_HEALTH_CHECK_PERIOD=1
+POSTGRES_CONNECTION_TIMEOUT=5
+
+# ------------------------------------------------------------------------------
+REDIS_ADDR=redis:6379
+REDIS_PASSWORD=123456789
+REDIS_DB=0

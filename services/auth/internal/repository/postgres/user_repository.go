@@ -7,17 +7,18 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/nidea1/go-gavel/services/auth/internal/domain"
+	"github.com/nidea1/go-gavel/services/auth/internal/repository"
 )
 
-type userRepository struct {
+type PostgresUserRepository struct {
 	pool *pgxpool.Pool
 }
 
-func NewUserRepository(pool *pgxpool.Pool) *userRepository {
-	return &userRepository{pool: pool}
+func NewPostgresUserRepository(pool *pgxpool.Pool) repository.UserRepository {
+	return &PostgresUserRepository{pool: pool}
 }
 
-func (r *userRepository) CreateUser(ctx context.Context, user *domain.User) error {
+func (r *PostgresUserRepository) CreateUser(ctx context.Context, user *domain.User) error {
 	query := `
 		INSERT INTO users (first_name, last_name, password, email, is_admin, is_active, created_at)
 		VALUES ($1, $2, $3, $4, $5, $6, $7)
@@ -32,7 +33,7 @@ func (r *userRepository) CreateUser(ctx context.Context, user *domain.User) erro
 	return nil
 }
 
-func (r *userRepository) GetUserByEmail(ctx context.Context, email string) (*domain.User, error) {
+func (r *PostgresUserRepository) GetUserByEmail(ctx context.Context, email string) (*domain.User, error) {
 	query := `
 		SELECT *
 		FROM users
