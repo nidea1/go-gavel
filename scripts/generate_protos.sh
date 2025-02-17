@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-#!/usr/bin/env bash
-
 # Stop the script on error
 set -e
 
@@ -28,34 +26,45 @@ then
     echo "protoc-gen-go-grpc installed."
 fi
 
-# Project proto directory
-BASE_PROTO_DIR="proto"
+# Use fixed path for Docker environment
+PROJECT_ROOT="/app"
+echo "PROJECT_ROOT: $PROJECT_ROOT"
+BASE_PROTO_DIR="$PROJECT_ROOT/proto"
 
 # Loop over all subdirectories under proto/
-for dir in "$BASE_PROTO_DIR"/*; do
-    # Check if it's a directory
-    if [ -d "$dir" ]; then
-        echo "Processing directory: $dir"
+find "$BASE_PROTO_DIR" -type d | while read dir; do
+    echo "Checking directory: $dir"
+    
+    # Find all proto files in the current directory
+    proto_files=$(find "$dir" -maxdepth 1 -name "*.proto")
+    
+    if [ -n "$proto_files" ]; then
+        echo "Compiling proto files in: $dir"
+        echo "Proto files to compile: $proto_files"
         
-        # List .proto files in that directory (remove -maxdepth if you need to check nested subdirectories)
-        proto_files=$(find "$dir" -maxdepth 1 -name "*.proto")
+        # Get relative path from BASE_PROTO_DIR to current directory
+        rel_dir=${dir#"$BASE_PROTO_DIR/"}
         
-        # If there are .proto files, compile them
-        if [ -n "$proto_files" ]; then
-            echo "Files to compile: $proto_files"
-            protoc \
-              -I="$BASE_PROTO_DIR" \
-              -I="$dir" \
-              --go_out="$dir" \
-              --go_opt=paths=source_relative \
-              --go-grpc_out="$dir" \
-              --go-grpc_opt=paths=source_relative \
-              $proto_files
-            echo "Compilation completed: $dir"
+        # Generate Go code for each proto file
+        cd "$BASE_PROTO_DIR" && protoc \
+            --proto_path="." \
+            --go_out="." \
+            --go_opt=paths=source_relative \
+            --go-grpc_out="." \
+            --go-grpc_opt=paths=source_relative \
+            $(find "$rel_dir" -maxdepth 1 -name "*.proto")
+
+        if [ $? -eq 0 ]; then
+            echo "✓ Successfully compiled protos in: $dir"
+            echo "Generated files in directory:"
+            ls -la "$dir"/*.pb.go || true
         else
-            echo "No .proto file found in $dir."
+            echo "✗ Failed to compile protos in: $dir"
+            exit 1
         fi
+    else
+        echo "No .proto files found in: $dir"
     fi
 done
 
-echo "All proto files compiled successfully."
+echo "✓ All proto files compiled successfully!"
