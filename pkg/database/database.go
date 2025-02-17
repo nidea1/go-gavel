@@ -2,11 +2,11 @@ package database
 
 import (
 	"context"
-	"log/slog"
-
 	"fmt"
+	"log/slog"
 	"time"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -17,8 +17,8 @@ type DBConfig struct {
 	Password          string
 	DBName            string
 	SSLMode           string
-	MinConns          uint8
-	MaxConns          uint8
+	MinConns          int32
+	MaxConns          int32
 	MaxConnLifetime   time.Duration
 	MaxConnIdleTime   time.Duration
 	HealthCheckPeriod time.Duration
@@ -26,8 +26,7 @@ type DBConfig struct {
 }
 
 func NewPgxPool(ctx context.Context, cfg DBConfig) (*pgxpool.Pool, error) {
-
-	connStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=%s",
+	connStr := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=%s",
 		cfg.User, cfg.Password, cfg.Host, cfg.Port, cfg.DBName, cfg.SSLMode)
 
 	config, err := pgxpool.ParseConfig(connStr)
@@ -37,16 +36,17 @@ func NewPgxPool(ctx context.Context, cfg DBConfig) (*pgxpool.Pool, error) {
 
 	config.MinConns = cfg.MinConns
 	config.MaxConns = cfg.MaxConns
-	config.MaxConnLifetime = cfg.MaxConnLifetime * time.Hour
-	config.MaxConnIdleTime = cfg.MaxConnIdleTime * time.Minute
-	config.HealthCheckPeriod = cfg.HealthCheckPeriod * time.Minute
-	config.ConnConfig.ConnectTimeout = cfg.ConnectionTimeout * time.Second
+	config.MaxConnLifetime = cfg.MaxConnLifetime
+	config.MaxConnIdleTime = cfg.MaxConnIdleTime
+	config.HealthCheckPeriod = cfg.HealthCheckPeriod
+	config.ConnConfig.ConnectTimeout = cfg.ConnectionTimeout
 
-	config.AfterConnect = func() {
+	config.AfterConnect = func(ctx context.Context, conn *pgx.Conn) error {
 		slog.Info("Connected to database", "database", cfg.DBName)
+		return nil
 	}
 
-	config.BeforeClose = func(conn *pgxpool.Conn) {
+	config.BeforeClose = func(conn *pgx.Conn) {
 		slog.Info("Closing connection to database", "database", cfg.DBName)
 	}
 

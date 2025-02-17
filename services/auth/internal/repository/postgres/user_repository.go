@@ -26,7 +26,7 @@ func (r *PostgresUserRepository) CreateUser(ctx context.Context, user *domain.Us
 
 	_, err := r.pool.Exec(ctx, query, user.FirstName, user.LastName, user.Password, user.Email, user.IsAdmin, user.IsActive, time.Now())
 	if err != nil {
-		slog.Error(err)
+		slog.Error("failed to create user", "error", err)
 		return err
 	}
 
@@ -43,7 +43,7 @@ func (r *PostgresUserRepository) GetUserByEmail(ctx context.Context, email strin
 	user := domain.User{}
 	err := r.pool.QueryRow(ctx, query, email).Scan(&user.ID, &user.FirstName, &user.LastName, &user.Password, &user.Email, &user.IsAdmin, &user.IsActive, &user.LastLogin, &user.CreatedAt)
 	if err != nil {
-		slog.Error(err)
+		slog.Error("failed to get user by email", "error", err)
 		return nil, err
 	}
 

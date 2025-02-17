@@ -1,6 +1,8 @@
 package config
 
 import (
+	"time"
+
 	"github.com/nidea1/go-gavel/pkg/utils"
 )
 
@@ -16,24 +18,24 @@ type DatabaseConfig struct {
 	Password          string
 	DBName            string
 	SSLMode           string
-	MinConns          int
-	MaxConns          int
-	MaxConnLifetime   int
-	MaxConnIdleTime   int
-	HealthCheckPeriod int
-	ConnectionTimeout int
+	MinConns          int32
+	MaxConns          int32
+	MaxConnLifetime   time.Duration
+	MaxConnIdleTime   time.Duration
+	HealthCheckPeriod time.Duration
+	ConnectionTimeout time.Duration
 }
 
 type JWTConfig struct {
 	SecretKey       string
-	AccessTokenTTL  int
-	RefreshTokenTTL int
+	AccessTokenTTL  time.Duration
+	RefreshTokenTTL time.Duration
 }
 
 type RedisConfig struct {
 	Addr     string
 	Password string
-	DB       int
+	DB       uint8
 }
 
 type Config struct {
@@ -57,22 +59,22 @@ func LoadConfig() *Config {
 			Password:          utils.GetEnvString("POSTGRES_PASSWORD", "password"),
 			DBName:            utils.GetEnvString("POSTGRES_DB", "auth"),
 			SSLMode:           utils.GetEnvString("POSTGRES_SSL_MODE", "disable"),
-			MinConns:          utils.GetEnvInt("POSTGRES_MIN_CONNS", 0),
-			MaxConns:          utils.GetEnvInt("POSTGRES_MAX_CONNS", 10),
-			MaxConnLifetime:   utils.GetEnvInt("POSTGRES_MAX_CONN_LIFETIME", 30),
-			MaxConnIdleTime:   utils.GetEnvInt("POSTGRES_MAX_CONN_IDLE_TIME", 10),
-			HealthCheckPeriod: utils.GetEnvInt("POSTGRES_HEALTH_CHECK_PERIOD", 60),
-			ConnectionTimeout: utils.GetEnvInt("POSTGRES_CONNECTION_TIMEOUT", 5),
+			MinConns:          int32(utils.GetEnvInt("POSTGRES_MIN_CONNS", 0)),
+			MaxConns:          int32(utils.GetEnvInt("POSTGRES_MAX_CONNS", 10)),
+			MaxConnLifetime:   time.Duration(utils.GetEnvInt("POSTGRES_MAX_CONN_LIFETIME", 30)) * time.Minute,
+			MaxConnIdleTime:   time.Duration(utils.GetEnvInt("POSTGRES_MAX_CONN_IDLE_TIME", 10)) * time.Minute,
+			HealthCheckPeriod: time.Duration(utils.GetEnvInt("POSTGRES_HEALTH_CHECK_PERIOD", 60)) * time.Minute,
+			ConnectionTimeout: time.Duration(utils.GetEnvInt("POSTGRES_CONNECTION_TIMEOUT", 5)) * time.Second,
 		},
 		JWT: JWTConfig{
 			SecretKey:       utils.GetEnvString("JWT_SECRET_KEY", "secret"),
-			AccessTokenTTL:  utils.GetEnvInt("JWT_ACCESS_TOKEN_TTL", 15),
-			RefreshTokenTTL: utils.GetEnvInt("JWT_REFRESH_TOKEN_TTL", 30),
+			AccessTokenTTL:  time.Duration(utils.GetEnvInt("JWT_ACCESS_TOKEN_TTL", 15)) * time.Minute,
+			RefreshTokenTTL: time.Duration(utils.GetEnvInt("JWT_REFRESH_TOKEN_TTL", 24*60)) * time.Minute,
 		},
 		Redis: RedisConfig{
 			Addr:     utils.GetEnvString("REDIS_ADDR", "localhost:6379"),
 			Password: utils.GetEnvString("REDIS_PASSWORD", ""),
-			DB:       utils.GetEnvInt("REDIS_DB", 0),
+			DB:       uint8(utils.GetEnvInt("REDIS_DB", 0)),
 		},
 	}
 }
