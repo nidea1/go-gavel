@@ -3,18 +3,17 @@ package auth;
 
 option go_package = "github.com/nidea1/go-gavel/proto/auth;auth";
 
-message SignupRequest {
+message RegisterRequest {
     string first_name = 1;
     string last_name = 2;
     string email = 3;
     string password = 4;
 }
 
-message SignupResponse {
+message RegisterResponse {
     bool status = 1;
     string message = 2;
-    optional Tokens data = 3;
-    optional Errors errors = 4;
+    optional Errors errors = 3;
 }
 
 message LoginRequest {
@@ -43,7 +42,6 @@ message LogoutResponse {
 message Tokens {
     string access_token = 1;
     string refresh_token = 2;
-    uint64 expires_at = 3;
 }
 
 message SingleValidationError {
@@ -57,7 +55,7 @@ message Errors {
 }
 
 service AuthService {
-    rpc Signup(SignupRequest)   returns (SignupResponse);
+    rpc Register(RegisterRequest)   returns (RegisterResponse);
     rpc Login(LoginRequest)     returns (LoginResponse);
     rpc Logout(LogoutRequest)   returns (LogoutResponse);
 }

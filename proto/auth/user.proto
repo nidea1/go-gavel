@@ -3,7 +3,7 @@ syntax = "proto3";
 package auth;
 import "common/pagination/pagination.proto";
 
-option go_package = "github.com/nidea1/go-gavel/proto/auth";
+option go_package = "github.com/nidea1/go-gavel/proto/auth;auth";
 
 
 message User {
