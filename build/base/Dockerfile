@@ -1,11 +1,11 @@
-FROM golang:1.23.5-alpine AS builder-base
+FROM golang:1.24-alpine AS builder-base
 
 # Install required packages
 RUN apk add --no-cache \
-    add \
     gcc \
     g++ \
     make \
+    bash \
     ca-certificates \
     protoc \
     protobuf \
