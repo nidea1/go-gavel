@@ -39,6 +39,7 @@ func main() {
 	})
 	if err != nil {
 		slog.Error(err.Error())
+		panic(err)
 	}
 	defer pool.Close()
 
@@ -58,11 +59,13 @@ func main() {
 	listener, err := net.Listen("tcp", ":"+cfg.Server.Port)
 	if err != nil {
 		slog.Error(err.Error())
+		panic(err)
 	}
 
 	slog.Info("gRPC server is running")
 	slog.Info("Listening on port", "port", cfg.Server.Port)
 	if err := grpcServer.Serve(listener); err != nil {
 		slog.Error(err.Error())
+		panic(err)
 	}
 }
